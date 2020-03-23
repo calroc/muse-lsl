@@ -50,43 +50,46 @@ class Muse():
     def connect(self, interface=None, backend='auto'):
         """Connect to the device"""
         try:
-            if self.backend == 'bluemuse':
-                print('Starting BlueMuse.')
-                subprocess.call('start bluemuse:', shell=True)
+            # if self.backend == 'bluemuse':
+            #     print('Starting BlueMuse.')
+            #     subprocess.call('start bluemuse:', shell=True)
 
-            else:
-                print('Connecting to %s: %s...' %
-                      (self.name if self.name else 'Muse', self.address))
-                if self.backend == 'gatt':
-                    self.interface = self.interface or 'hci0'
-                    self.adapter = pygatt.GATTToolBackend(self.interface)
-                else:
-                    self.adapter = pygatt.BGAPIBackend(
-                        serial_port=self.interface)
+            # else:
+            print('Connecting to %s: %s...' %
+                    (self.name if self.name else 'Muse', self.address))
+            # if self.backend == 'gatt':
+            #     self.interface = self.interface or 'hci0'
+            #     self.adapter = pygatt.GATTToolBackend(self.interface)
+            # else:
+            #     self.adapter = pygatt.BGAPIBackend(
+            #         serial_port=self.interface)
 
-                self.adapter.start()
-                self.device = self.adapter.connect(self.address)
+            self.adapter = pygatt.BGAPIBackend(
+                    serial_port=self.interface)
 
-                # subscribes to EEG stream
-                if self.enable_eeg:
-                    self._subscribe_eeg()
+            self.adapter.start()
+            self.device = self.adapter.connect(self.address)
 
-                if self.enable_control:
-                    self._subscribe_control()
+            # subscribes to EEG stream
+            if self.enable_eeg:
+                self._subscribe_eeg()
 
-                if self.enable_telemetry:
-                    self._subscribe_telemetry()
+            if self.enable_control:
+                self._subscribe_control()
 
-                if self.enable_acc:
-                    self._subscribe_acc()
+            if self.enable_telemetry:
+                self._subscribe_telemetry()
 
-                if self.enable_gyro:
-                    self._subscribe_gyro()
+            if self.enable_acc:
+                self._subscribe_acc()
 
-                if self.enable_ppg:
-                    self._subscribe_ppg()
+            if self.enable_gyro:
+                self._subscribe_gyro()
 
-                self.last_timestamp = self.time_func()
+            if self.enable_ppg:
+                self._subscribe_ppg()
+
+            self.last_timestamp = self.time_func()
 
             return True
 
